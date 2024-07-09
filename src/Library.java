@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Library {
     private static Library libraryInstance = null;
@@ -29,7 +30,12 @@ public class Library {
     // members
     // method of checking if user already exists
     public boolean hasMembership(String name, String phoneNumber){
-        return this.memberfactory.createMember(name, phoneNumber) == null; // true - has membership
+        for(Member member: this.members){
+            if(member.getName().equals(name) && member.getPhoneNumber().equals(phoneNumber)){
+                return true;
+            }
+        }
+        return false;
     }
 
     // method of adding a new member - return the memeber id
@@ -69,6 +75,8 @@ public class Library {
     }
 
     // method of adding a copy to existing book
+    // maybe use cloneable / prototype
+
 
     // method of searching a book by id/title/author
     // by id:
@@ -106,6 +114,18 @@ public class Library {
     // loans
     // method of getting all books that are borrowed by members
     // method of getting all books that their return time had passed
+    public ArrayList<Loan> getAllBorrowedPastTime(){
+        ArrayList<Loan> late = new ArrayList<>();
+        Date today = new Date(System.currentTimeMillis());
+        for(Member member : this.members){
+            for(Loan loan : member.getBorrowedBooks()){
+                if(loan.getReturnDate().after(today)){
+                    late.add(loan);
+                }
+            }
+        }
+        return late; // maybe should return here a list of users that are late
+    }
     // method of returning a book (removing from list of borrowed books of member, changing state of book to available in all books list)
 
     // library summery method - includes all private methods:
