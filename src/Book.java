@@ -10,7 +10,7 @@ public class Book {
         this.title = title;
         this.author = author;
         this.publishYear = publishYear;
-        this.isAvailable = true; // by default available
+        this.isAvailable = true; // by default available - consider using state pattern
         this.bookId = Book.id++;
     }
 
