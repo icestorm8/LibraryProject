@@ -1,9 +1,12 @@
 package LibrerianUI;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import Logic.Library;
 
@@ -66,11 +69,35 @@ public class MainWindow extends JFrame{
         });
 
         // result list:
-        JTable results = new JTable();
-        bookPanel.add(results);
+        BookTableModel bookModel = new BookTableModel(library.getAllBooks());
+
+        JTable results = new JTable(bookModel);
+        bookModel.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                results.repaint();
+            }
+        });
+        // adding it to JScrollPane
+        JScrollPane scroll = new JScrollPane(results);
+        bookPanel.add(scroll);
+//        bookModel.fireTableDataChanged();
+
         // choose if by id or by title, author, publish year (radio button)
-        // add book frame
-        JFrame addBookForm = new JFrame();
+        // add book form
+        NewBookForm form = new NewBookForm(bookModel);
+
+        // button that opens the form
+        JButton addButton = new JButton("add book");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                form.changeFrameVisibility();
+            }
+        });
+        bookPanel.add(addButton);
+
+
 
 
         // set size to fit screen size

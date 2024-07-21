@@ -117,7 +117,10 @@ public class Library {
         }
 
     }
-
+    // get all books
+    public ArrayList<Book> getAllBooks(){
+        return this.books;
+    }
 
 
     // method of searching a book by id/title/author
