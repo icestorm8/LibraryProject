@@ -72,16 +72,10 @@ public class MainWindow extends JFrame{
         BookTableModel bookModel = new BookTableModel(library.getAllBooks());
 
         JTable results = new JTable(bookModel);
-        bookModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                results.repaint();
-            }
-        });
+//
         // adding it to JScrollPane
         JScrollPane scroll = new JScrollPane(results);
         bookPanel.add(scroll);
-//        bookModel.fireTableDataChanged();
 
         // choose if by id or by title, author, publish year (radio button)
         // add book form
