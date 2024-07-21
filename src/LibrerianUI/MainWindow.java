@@ -6,6 +6,8 @@ import javax.swing.event.TableModelListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Arrays;
 
 import Logic.Library;
@@ -57,16 +59,6 @@ public class MainWindow extends JFrame{
         submitSearchButton.setFont(new Font("Serif", Font.PLAIN, 20));
         bookPanel.add(searchBook);
         bookPanel.add(submitSearchButton);
-        // listen for click on search button
-        submitSearchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String query = searchBook.getText();
-                if (!query.isEmpty()){
-                    JOptionPane.showMessageDialog(mainScreen, searchBook.getText());
-                }
-            }
-        });
 
         // result list:
         BookTableModel bookModel = new BookTableModel(library.getAllBooks());
@@ -76,6 +68,39 @@ public class MainWindow extends JFrame{
         // adding it to JScrollPane
         JScrollPane scroll = new JScrollPane(results);
         bookPanel.add(scroll);
+        results.setDragEnabled(false);
+
+        results.addMouseListener(new java.awt.event.MouseAdapter() {
+            // get book in row selected
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = results.rowAtPoint(evt.getPoint());
+//                int col = results.columnAtPoint(evt.getPoint());
+                if (row >= 0) {
+                    JOptionPane.showMessageDialog(mainScreen, bookModel.getBookAtRow(row));
+                }
+            }
+        });
+
+        // listen for click on search button
+        submitSearchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String query = searchBook.getText();
+                if (!query.isEmpty()){
+                    JOptionPane.showMessageDialog(mainScreen, searchBook.getText());
+                    query = searchBook.getText();
+                    bookModel.passNewResults(library.getBookByTitle(query));
+
+                }
+                else{
+                    query = "";
+                    bookModel.passNewResults(library.getAllBooks());
+                }
+
+            }
+        });
+
 
         // choose if by id or by title, author, publish year (radio button)
         // add book form

@@ -39,6 +39,13 @@ public class BookTableModel extends AbstractTableModel {
             }
         }
 
+        public void passNewResults(ArrayList<Book> results){
+            this.books = results;
+            this.update();
+        }
+        public Book getBookAtRow(int row){
+            return books.get(row);
+        }
         // Optional, the name of your column
         public String getColumnName(int col) {
             return headers[col] ;
