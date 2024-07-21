@@ -1,3 +1,5 @@
+package Logic;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -5,7 +7,7 @@ public class Library {
     private static Library libraryInstance = null;
     private Librarian librarian; // could have more than 1 librarian?
     private ArrayList<Book> books; // using arraylist to have a dynamic list and an easy access
-//    private ArrayList<Loan> loans;
+//    private ArrayList<Logic.Loan> loans;
     private ArrayList<Member> members;
     private MemberFactory memberfactory;
     private BookFactory bookfactory;
@@ -15,10 +17,10 @@ public class Library {
         this.members = new ArrayList<Member>();
         this.memberfactory = new MemberFactory(this.members);
         this.bookfactory = new BookFactory(this.books);
-//        loans = new ArrayList<Loan>(); // NOT SURE IF LOAN SHOULD BE RELATED TO THE BOOK ITSELF
+//        loans = new ArrayList<Logic.Loan>(); // NOT SURE IF LOAN SHOULD BE RELATED TO THE BOOK ITSELF
     }
 
-    // create a single instance of Library using singleton design pattern
+    // create a single instance of Logic.Library using singleton design pattern
     public static Library getInstance() {
         if(Library.libraryInstance == null) {
             Library.libraryInstance = new Library();
@@ -50,11 +52,34 @@ public class Library {
     public boolean removeMember(int id){
         return this.members.removeIf(member -> member.getMemberId() == id);
     }
+
     // by name and phone number
     public boolean removeMember(String name, String phoneNumber){
         return this.members.removeIf(member -> member.getName().equals(name) && member.getPhoneNumber().equals(phoneNumber));
     }
-    // method of getting a member by name/id
+    // method of getting a member
+    // by id
+    public Member getMemberById(int id){
+        for(Member member: this.members){
+            if(member.getMemberId() == id){
+                return member;
+            }
+        }
+        return null; // book with that id wasn't found
+    }
+    // by name - could be a list of members with the same name
+    public ArrayList<Member> getMembersByName(String name){
+        ArrayList<Member> members = new ArrayList<>();
+        for(Member member: this.members){
+            if(member.getName().equalsIgnoreCase(name)){
+                members.add(0, member);
+            }
+            else if (member.getName().toLowerCase().contains(name.toLowerCase())){
+                members.add(member);
+            }
+        }
+        return members;
+    }
 
     // books
     // method of adding a new book
@@ -76,11 +101,28 @@ public class Library {
 
     // method of adding a copy to existing book
     // maybe use cloneable / prototype
+    public void addCopyofBook(Book book){
+        System.out.println(book);
+        Book copy = (Book) book.clone();
+        System.out.println(copy);
+        this.books.add(copy);
+    }
+    public void addCopyofBookById(int id){
+        Book book = this.getBookById(id);
+        if(book != null){
+            System.out.println(book);
+            Book copy = (Book) book.clone();
+            System.out.println(copy);
+            this.books.add(copy);
+        }
+
+    }
+
 
 
     // method of searching a book by id/title/author
     // by id:
-    public Book searchById(int id){
+    public Book getBookById(int id){
        for(Book book: this.books){
            if(book.getBookId() == id){
                return book;
@@ -89,7 +131,7 @@ public class Library {
        return null; // book with that id wasn't found
     }
     // by title
-    public ArrayList<Book> searchByTitle(String title){
+    public ArrayList<Book> getBookByTitle(String title){
         ArrayList<Book> booksWithTitle = new ArrayList<>();
         for(Book book: this.books){
             if(book.getTitle().equals(title) || book.getTitle().contains(title)){
@@ -99,7 +141,7 @@ public class Library {
         return booksWithTitle;
     }
     // by author
-    public ArrayList<Book> searchByAuthor(String author){
+    public ArrayList<Book> getBookByAuthor(String author){
         ArrayList<Book> booksWithAuthor = new ArrayList<>();
         for(Book book: this.books){
             if(book.getAuthor().equals(author) || book.getAuthor().contains(author)){
@@ -112,6 +154,9 @@ public class Library {
 
 
     // loans
+    // loan a book by id
+    // return a book by id
+    // view all loans of member
     // method of getting all books that are borrowed by members
     // method of getting all books that their return time had passed
     public ArrayList<Loan> getAllBorrowedPastTime(){
@@ -127,11 +172,13 @@ public class Library {
         return late; // maybe should return here a list of users that are late
     }
     // method of returning a book (removing from list of borrowed books of member, changing state of book to available in all books list)
-
+//    public boolean returnBook(){
+//
+//    }
     // library summery method - includes all private methods:
 
     public String getSummery(){
-        return "ACTIVE MEMBERS: " + this.members.size() + "\nTOTAL BOOKS: " + this.books.size() + "\nBORROWED BOOKS: " + this.getAmountOfBorrowedBooks() + "\nAVAILABLE BOOKS: "+( this.books.size()- this.getAmountOfBorrowedBooks());
+        return String.format("SUMMERY: \nACTIVE MEMBERS: %d\nTOTAL BOOKS: %d\nBORROWED BOOKS: %d\nAVAILABLE BOOKS: %d\n" ,this.members.size(), this.books.size(), this.getAmountOfBorrowedBooks(), ( this.books.size()- this.getAmountOfBorrowedBooks()));
     }
     // getting number of books borrowed (with data if return date has passed, and by who)
     private int getAmountOfBorrowedBooks(){
@@ -143,8 +190,7 @@ public class Library {
         }
         return this.books.size() - count;
     }
-    // getting number of books available
-    // getting number of loans(? including past loans?)
+
     // ^ this is the number of books borrowed, unless it includes the past loans, but i think having a statistic of who is late is better here
 
 

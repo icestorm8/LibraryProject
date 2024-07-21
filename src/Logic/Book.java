@@ -1,4 +1,6 @@
-public class Book {
+package Logic;
+
+public class Book implements Prototype{
     private String title;
     private String author;
     private int publishYear;
@@ -54,7 +56,17 @@ public class Book {
         isAvailable = available;
     }
 
+    @Override
+    public Prototype clone() {
+        return new Book(this.title, this.author, this.publishYear);
+    }
 
-    //5. Prototype Pattern - consider using for copying the book and creating another instance of it
+    @Override
+    public String toString() {
+        return String.format("title: %s\nauthor: %s\npublish year: %d\navailable: %b\nid: %d", this.title, this.author, this.publishYear,
+             this.isAvailable, this.bookId);
+    }
+
+    //5. Logic.Prototype Pattern - consider using for copying the book and creating another instance of it
     //The prototype pattern is used when the Object creation is costly and requires a lot of time and resources, and you have a similar Object already existing. So this pattern provides a mechanism to copy the original Object to a new Object and then modify it according to our needs. This pattern uses Java cloning to copy the Object. The prototype design pattern mandates that the Object which you are copying should provide the copying feature. It should not be done by any other class. However, whether to use the shallow or deep copy of the object properties depends on the requirements and is a design decision.
 }
