@@ -27,7 +27,7 @@ public class Member {
     }
     public String getPhoneNumber(){return this.phoneNumber;}
 
-    public ArrayList<Loan> getBorrowedBooks() {
+    public ArrayList<Loan> getAllActiveLoans() {
         return borrowedBooks;
     }
 

@@ -56,7 +56,8 @@ public class NewBookForm {
                     return;
                 }
                 int id = Library.getInstance().addBook(data[0], data[1], Integer.parseInt(year.toString()));
-                JOptionPane.showMessageDialog(addBookForm, Library.getInstance().getBookById(id).toString());
+                JOptionPane.showMessageDialog(addBookForm, Library.getInstance().getBookById(id).toString(), "book added", JOptionPane.INFORMATION_MESSAGE);
+                resetInputFields();
                 bookModel.update();
             }
         });
@@ -82,6 +83,11 @@ public class NewBookForm {
         this.addBookForm.setVisible(true);
     }
 
+    private void resetInputFields(){
+        for(JTextField input : this.inputs){
+            input.setText("");
+        }
+    }
    private void displayInputs(){
 
        // define inputs and button

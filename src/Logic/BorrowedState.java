@@ -9,6 +9,7 @@ public class BorrowedState implements BookState{
     @Override
     public void returnBook(Book book) {
         System.out.println("book is borrowed, return the book");
+        book.setState(new AvailableState());
     }
 
     @Override

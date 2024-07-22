@@ -5,6 +5,7 @@ public class AvailableState implements BookState{
     @Override
     public void borrowBook(Book book) {
         System.out.println("book can be borrowed");
+        book.setState(new BorrowedState());
     }
 
     @Override

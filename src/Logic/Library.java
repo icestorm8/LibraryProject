@@ -57,6 +57,11 @@ public class Library {
     public boolean removeMember(String name, String phoneNumber){
         return this.members.removeIf(member -> member.getName().equals(name) && member.getPhoneNumber().equals(phoneNumber));
     }
+
+    // get all memebers
+    public ArrayList<Member> getAllMembers(){
+        return this.members;
+    }
     // method of getting a member
     // by id
     public Member getMemberById(int id){
@@ -158,15 +163,47 @@ public class Library {
 
     // loans
     // loan a book by id
+    public boolean loanBook(Book book, int memberId){
+        Member member = this.getMemberById(memberId);
+        if(member!= null){
+            book.doAction();
+            member.addBorrowedBook(book.getBookId());
+            return true;
+        }
+        return false;
+    }
     // return a book by id
+    public void returnBook(int bookId){
+        // this will return the book if the book is borrowed
+        Book book = this.getBookById(bookId);
+        // remove loan from member
+        this.removeLoanByBookId(bookId);
+        book.doAction();
+
+    }
     // view all loans of member
     // method of getting all books that are borrowed by members
+    public boolean removeLoanByBookId(int bookId){
+        for(Member member: this.members){
+            ArrayList<Loan> memberActiveLoans = member.getAllActiveLoans();
+            if(!memberActiveLoans.isEmpty()){
+                for(Loan loan: memberActiveLoans){
+                    if(loan.getBookId() == bookId){
+                        member.returnBorrowedBook(bookId);
+                        return true;
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
     // method of getting all books that their return time had passed
     public ArrayList<Loan> getAllBorrowedPastTime(){
         ArrayList<Loan> late = new ArrayList<>();
         Date today = new Date(System.currentTimeMillis());
         for(Member member : this.members){
-            for(Loan loan : member.getBorrowedBooks()){
+            for(Loan loan : member.getAllActiveLoans()){
                 if(loan.getReturnDate().after(today)){
                     late.add(loan);
                 }
