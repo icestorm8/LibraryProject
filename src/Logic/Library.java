@@ -187,7 +187,7 @@ public class Library {
     private int getAmountOfBorrowedBooks(){
         int count = 0;
         for(Book book : this.books){
-            if(!book.isAvailable()){
+            if(book.getState().equals("available")){
                 count++;
             }
         }

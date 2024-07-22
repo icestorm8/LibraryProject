@@ -4,7 +4,7 @@ public class Book implements Prototype{
     private String title;
     private String author;
     private int publishYear;
-    private boolean isAvailable;
+    private BookState state;
     private int bookId;
     private static int id = 0;
 
@@ -12,7 +12,7 @@ public class Book implements Prototype{
         this.title = title;
         this.author = author;
         this.publishYear = publishYear;
-        this.isAvailable = true; // by default available - consider using state pattern
+        this.state = new AvailableState(); // by default available - consider using state pattern
         this.bookId = Book.id++;
     }
 
@@ -30,13 +30,14 @@ public class Book implements Prototype{
         return publishYear;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
     public int getBookId() {
         return bookId;
     }
+
+    public String getState(){
+        return this.state.toString();
+    }
+
 
     // setters - title, author, publish year, isAvailable (used by loans)
 
@@ -52,8 +53,8 @@ public class Book implements Prototype{
         this.publishYear = publishYear;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public void setState(BookState newState) {
+        this.state = newState;
     }
 
     @Override
@@ -61,10 +62,18 @@ public class Book implements Prototype{
         return new Book(this.title, this.author, this.publishYear);
     }
 
+
+    public void doAction(){
+        if(this.state instanceof AvailableState){
+            this.state.borrowBook(this);
+        }else{
+            this.state.returnBook(this);
+        }
+    }
     @Override
     public String toString() {
         return String.format("title: %s\nauthor: %s\npublish year: %d\navailable: %b\nid: %d", this.title, this.author, this.publishYear,
-             this.isAvailable, this.bookId);
+             this.state.toString(), this.bookId);
     }
 
     //5. Logic.Prototype Pattern - consider using for copying the book and creating another instance of it

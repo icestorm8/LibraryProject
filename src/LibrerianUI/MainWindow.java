@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
 
+import Logic.Book;
 import Logic.Library;
 
 public class MainWindow extends JFrame{
@@ -75,9 +76,25 @@ public class MainWindow extends JFrame{
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int row = results.rowAtPoint(evt.getPoint());
-//                int col = results.columnAtPoint(evt.getPoint());
                 if (row >= 0) {
-                    JOptionPane.showMessageDialog(mainScreen, bookModel.getBookAtRow(row));
+                    Book selectedBook = bookModel.getBookAtRow(row);
+                    String[] options = { "close", "remove", "add copy"};
+                    int selection = JOptionPane.showOptionDialog(mainScreen, bookModel.getBookAtRow(row), "what would you like to do?",
+                            0, 2, null, options, options[0]);
+                    if (selection == 1) {
+                        selection = JOptionPane.showConfirmDialog(mainScreen, "are you sure?", "confirm removal of book", JOptionPane.OK_CANCEL_OPTION);
+                        if(selection == JOptionPane.OK_OPTION) {
+                            library.removeBook(selectedBook.getBookId());
+                            bookModel.update();
+                        }
+                    }
+                    if(selection == 2){
+                        selection = JOptionPane.showConfirmDialog(mainScreen, "are you sure?", "confirm addition of this book copy", JOptionPane.OK_CANCEL_OPTION);
+                        if(selection == JOptionPane.OK_OPTION) {
+                            library.addCopyofBook(selectedBook);
+                            bookModel.update();
+                        }
+                    }
                 }
             }
         });
