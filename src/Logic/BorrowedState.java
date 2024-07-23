@@ -6,12 +6,21 @@ public class BorrowedState implements BookState{
         System.out.println("book is already borrowed - do nothing");
     }
 
+    /**
+     * implementation of return book method for Borrowed state
+     * changes the state of the book to be available
+     * @param book Book to return
+     */
     @Override
     public void returnBook(Book book) {
         System.out.println("book is borrowed, return the book");
         book.setState(new AvailableState());
     }
 
+    /**
+     * toString override, returns the state as a readable string
+     * @return String
+     */
     @Override
     public String toString() {
         return "borrowed";

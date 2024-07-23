@@ -5,22 +5,27 @@ import java.util.Date;
 
 public class Library {
     private static Library libraryInstance = null;
-    private Librarian librarian; // could have more than 1 librarian?
+    private Librarian librarian; // could have more than 1 librarian? will be used if had any need for login
     private ArrayList<Book> books; // using arraylist to have a dynamic list and an easy access
-//    private ArrayList<Logic.Loan> loans;
     private ArrayList<Member> members;
     private MemberFactory memberfactory;
     private BookFactory bookfactory;
+
+    /**
+     * private constructor, used for creating only one instance of the book
+     */
     private Library(){
         this.librarian = new Librarian("1");
         this.books = new ArrayList<Book>();
         this.members = new ArrayList<Member>();
         this.memberfactory = new MemberFactory(this.members);
         this.bookfactory = new BookFactory(this.books);
-//        loans = new ArrayList<Logic.Loan>(); // NOT SURE IF LOAN SHOULD BE RELATED TO THE BOOK ITSELF
     }
 
-    // create a single instance of Logic.Library using singleton design pattern
+    /**
+     * create a single instance of Library using singleton design pattern
+     * if the instance already created - returns that instance
+     */
     public static Library getInstance() {
         if(Library.libraryInstance == null) {
             Library.libraryInstance = new Library();
