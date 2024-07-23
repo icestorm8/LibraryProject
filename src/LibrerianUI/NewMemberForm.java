@@ -31,9 +31,24 @@ public class NewMemberForm extends JFrame {
             NewMemberForm.error_illegal_phone_number.setVisible(false);
             this.add(LibrerianUI.NewMemberForm.error_illegal_phone_number);
 
+
+            JLabel title = new JLabel("New Member Form", SwingConstants.CENTER);
+            title.setFont(new Font("Serif", Font.PLAIN, 25));
+            this.add(title);
+
             this.displayInputs();
             JButton submit = new JButton("submit");
             this.add(submit);
+
+            // set size - center the frame
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            int xSize = ((int) dim.getWidth());
+            int ySize = ((int) dim.getHeight());
+            this.setSize(xSize/2, ySize/2);
+            this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+
+
+            // add event listener for submit form button
             submit.addActionListener(e -> {
                 displayError(4);
                 String[] data = {"", ""};
@@ -55,7 +70,7 @@ public class NewMemberForm extends JFrame {
                 int id = Library.getInstance().addMember(data[0], data[1]);
                 JOptionPane.showMessageDialog(null, Library.getInstance().getMemberById(id).toString(), "member added", JOptionPane.INFORMATION_MESSAGE);
                 resetInputFields();
-                this.memberModel.update();
+//                this.memberModel.update();
             });
 
         }
@@ -93,7 +108,7 @@ public class NewMemberForm extends JFrame {
             // define inputs and button
             final String[] labels = {"name", "phone number"};
             for (String label : labels) {
-                JLabel l = new JLabel(label, JLabel.TRAILING);
+                JLabel l = new JLabel(label, SwingConstants.LEFT);
                 this.add(l);
                 JTextField textField = new JTextField(10);
                 this.inputs.add(textField);

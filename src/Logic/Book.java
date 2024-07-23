@@ -1,8 +1,10 @@
 package Logic;
 
 import java.time.Year;
+import java.util.ArrayList;
 
 public class Book implements Prototype{
+    private ArrayList<Observer> observers = new ArrayList<>(); // library, members, ui
     private String title;
     private String author;
     private int publishYear;
@@ -150,5 +152,6 @@ public class Book implements Prototype{
         return String.format("title: %s\nauthor: %s\npublish year: %d\navailable: %s\nid: %d", this.title, this.author, this.publishYear,
              this.state.toString().equals("available") ? "true" : "borrowed" , this.bookId);
     }
+
 
 }

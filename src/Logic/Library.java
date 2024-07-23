@@ -3,7 +3,8 @@ package Logic;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Library {
+public class Library implements Subject {
+    private ArrayList<Observer> observers = new ArrayList<>(); // library, members, ui
     private static Library libraryInstance = null;
     private Librarian librarian; // could have more than 1 librarian? will be used if had any need for login
     private ArrayList<Book> books; // using arraylist to have a dynamic list and an easy access
@@ -68,6 +69,7 @@ public class Library {
         }
         // if doesn't have membership = create new member, else - return id of existing one
         Member newMember = this.memberfactory.createMember(name, phoneNumber);
+        this.notifyObservers();
         return newMember.getMemberId();
     }
 
@@ -78,7 +80,9 @@ public class Library {
      * @return boolean - did member with the id was found and removed
      */
     public boolean removeMember(int id){
-        return this.members.removeIf(member -> member.getMemberId() == id);
+        boolean isSuccessful = this.members.removeIf(member -> member.getMemberId() == id);
+        this.notifyObservers();
+        return isSuccessful;
     }
 
     /**
@@ -88,7 +92,9 @@ public class Library {
      * @return boolean did member was found and removed
       */
     public boolean removeMember(String name, String phoneNumber){
-        return this.members.removeIf(member -> member.getName().equals(name) && member.getPhoneNumber().equals(phoneNumber));
+        boolean isSuccessful =  this.members.removeIf(member -> member.getName().equals(name) && member.getPhoneNumber().equals(phoneNumber));
+        this.notifyObservers();
+        return isSuccessful;
     }
 
     /**
@@ -114,6 +120,27 @@ public class Library {
         return null; // book with that id wasn't found
     }
 
+    /**
+     * returns a list of members with the phone number requested (or if librarian entered half of the phone)
+     * a list because a mom can have a membership for her kid and for herself lets say
+     * @param phoneNumber of member
+     * @return arraylist of members with the same phone (typically a family)
+     */
+    public ArrayList<Member> getMembersByPhone(String phoneNumber){
+        if(phoneNumber == null){
+            return null;
+        }
+        if(phoneNumber.isEmpty()){
+            return null;
+        }
+        ArrayList<Member> result = new ArrayList<>();
+        for(Member member: this.members){
+            if(member.getPhoneNumber().equals(phoneNumber) || member.getPhoneNumber().contains(phoneNumber)){
+                result.add(member);
+            }
+        }
+        return result;
+    }
 
 
     /**
@@ -152,6 +179,7 @@ public class Library {
         // if already exists - return the first book that answers these properties
         // else - returns the new book's id with those properties
         Book newBook = this.bookfactory.createBook(title, author, publishYear);
+        this.notifyObservers();
         return newBook.getBookId();
     }
 
@@ -164,7 +192,20 @@ public class Library {
      * @return boolean
      */
     public boolean removeBook(int id){
-        return this.books.removeIf(book -> book.getBookId() == id);
+        boolean isSuccessful = false;
+        Book foundBook = this.getBookById(id);
+        if(foundBook != null ){
+           if(foundBook.getState().equals("borrowed")){
+               this.removeLoanByBookId(id);
+           }
+            isSuccessful = this.books.removeIf(book -> book.getBookId() == id);
+            this.notifyObservers();
+        }
+        else{
+            return false;
+        }
+
+        return isSuccessful;
     }
 
     /**
@@ -175,7 +216,9 @@ public class Library {
      * @return true (books found and removed), false (book/s weren't found)
      */
     public boolean removeAllCopies(String title, String author, int publishYear){
-        return this.books.removeIf(book -> book.getTitle().equals(title) && book.getAuthor().equals(author) && book.getPublishYear() == publishYear);
+        boolean isSuccessful = this.books.removeIf(book -> book.getTitle().equals(title) && book.getAuthor().equals(author) && book.getPublishYear() == publishYear);
+        this.notifyObservers();
+        return isSuccessful;
     }
 
     // method of adding a copy to existing book
@@ -190,6 +233,7 @@ public class Library {
         Book copy = (Book) book.clone();
         System.out.println(copy);
         this.books.add(copy);
+        this.notifyObservers();
     }
 
     /**
@@ -204,6 +248,7 @@ public class Library {
             Book copy = (Book) book.clone();
             System.out.println(copy);
             this.books.add(copy);
+            this.notifyObservers();
         }
 
     }
@@ -232,6 +277,15 @@ public class Library {
        return null; // book with that id wasn't found
     }
 
+    public ArrayList<Book> getBooksByYear(int year){
+        ArrayList<Book> result = new ArrayList<>();
+        for(Book book : this.books){
+            if(book.getPublishYear() == year){
+                result.add(book);
+            }
+        }
+        return result;
+    }
 
     /**
      * returns a list of books that their titles are equal or contain the query received
@@ -288,6 +342,7 @@ public class Library {
         if(member!= null){
             book.doAction();
             member.addBorrowedBook(book.getBookId());
+            this.notifyObservers(); // loan added
             return true;
         }
         return false;
@@ -305,11 +360,18 @@ public class Library {
         // remove loan from member
         this.removeLoanByBookId(bookId);
         book.doAction();
+        this.notifyObservers();
     }
 
-    // view all loans of member
-    // method of getting all books that are borrowed by members
-    public boolean removeLoanByBookId(int bookId){
+    /**
+     * removes a loan by the id of the book
+     * finds the member that loaned the book with the id received
+     * if loan for that id wasn't found, returns false
+     * otherwise returns true and removes the loan from the member
+     * @param bookId id of book to return
+     * @return boolean
+     */
+    private boolean removeLoanByBookId(int bookId){
         for(Member member: this.members){
             ArrayList<Loan> memberActiveLoans = member.getAllActiveLoans();
             if(!memberActiveLoans.isEmpty()){
@@ -324,7 +386,11 @@ public class Library {
         }
         return false;
     }
-    // method of getting all books that their return time had passed
+
+    /**
+     * gets all loans that their return time had passed
+     * @return list of loans
+     */
     public ArrayList<Loan> getAllBorrowedPastTime(){
         ArrayList<Loan> late = new ArrayList<>();
         Date today = new Date(System.currentTimeMillis());
@@ -337,16 +403,37 @@ public class Library {
         }
         return late; // maybe should return here a list of users that are late
     }
-    // method of returning a book (removing from list of borrowed books of member, changing state of book to available in all books list)
-//    public boolean returnBook(){
-//
-//    }
-    // library summery method - includes all private methods:
 
+    /**
+     * gets the member by its loan so that we can display easier view for librarian using the system
+     * of the late loans
+     * @param loaned
+     * @return
+     */
+    public Member getMemberByLoan(Loan loaned){
+        for(Member member: this.members){
+            ArrayList<Loan> loans = member.getAllActiveLoans();
+            for(Loan loan: loans){
+                if(loan.getBookId() == loaned.getBookId()){
+                    return member;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * returns a string representing the library summery
+     * @return String summery
+     */
     public String getSummery(){
         return String.format("SUMMERY: \nACTIVE MEMBERS: %d\nTOTAL BOOKS: %d\nBORROWED BOOKS: %d\nAVAILABLE BOOKS: %d\n" ,this.members.size(), this.books.size(), this.getAmountOfBorrowedBooks(), ( this.books.size()- this.getAmountOfBorrowedBooks()));
     }
-    // getting number of books borrowed (with data if return date has passed, and by who)
+
+    /**
+     * gets all books that are borrowed
+     * @return number of borrowed books
+     */
     private int getAmountOfBorrowedBooks(){
         int count = 0;
         for(Book book : this.books){
@@ -357,8 +444,33 @@ public class Library {
         return this.books.size() - count;
     }
 
-    // ^ this is the number of books borrowed, unless it includes the past loans, but i think having a statistic of who is late is better here
 
+    /**
+     * @param observer
+     */
+    @Override
+    public void addObserver(Observer observer) {
+        this.observers.add(observer);
+    }
 
+    /**
+     * @param observer
+     */
+    @Override
+    public void removeObserver(Observer observer) {
+        this.observers.remove(observer);
+    }
+
+    /**
+     * when book list changed in size
+     * when member list changed in size
+     */
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            // change in size of books
+            observer.update();
+        }
+    }
 
 }

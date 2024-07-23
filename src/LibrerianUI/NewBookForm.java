@@ -10,8 +10,7 @@ import java.awt.event.ActionListener;
 import java.time.Year;
 import java.util.ArrayList;
 
-public class NewBookForm {
-    private JFrame addBookForm;
+public class NewBookForm extends JFrame{
     private static final JLabel error_empty_fields = new JLabel("must fill all fields to add a new book!");
     private static final JLabel error_invalid_year = new JLabel("must enter valid year!");
     private ArrayList<JTextField> inputs;
@@ -19,20 +18,31 @@ public class NewBookForm {
     public NewBookForm(BookTableModel bookModel){
         this.bookModel = bookModel;
         this.inputs = new ArrayList<>();
-        this.addBookForm = new JFrame();
-        this.addBookForm.setTitle("new book form");
-        this.addBookForm.setSize(500, 500);
-        this.addBookForm.setVisible(false);
-        this.addBookForm.setLocation(300,30);
+        this.setTitle("new book form");
+        this.setVisible(false);
+        this.setLocation(300,30);
         GridLayout formLayout = new GridLayout(10,3);
-        this.addBookForm.setLayout(formLayout);
+        this.setLayout(formLayout);
         NewBookForm.error_empty_fields.setVisible(false);
-        this.addBookForm.add(NewBookForm.error_empty_fields);
+        this.add(NewBookForm.error_empty_fields);
         NewBookForm.error_invalid_year.setVisible(false);
-        this.addBookForm.add(NewBookForm.error_invalid_year);
+        this.add(NewBookForm.error_invalid_year);
+
+        JLabel title = new JLabel("New Book Form", SwingConstants.CENTER);
+        title.setFont(new Font("Serif", Font.PLAIN, 25));
+        this.add(title);
+
         this.displayInputs();
         JButton submit = new JButton("sumbit");
-        this.addBookForm.add(submit);
+        this.add(submit);
+
+        // set size - center the frame
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int xSize = ((int) dim.getWidth());
+        int ySize = ((int) dim.getHeight());
+        this.setSize(xSize/2, ySize/2);
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -60,9 +70,9 @@ public class NewBookForm {
                     return;
                 }
                 int id = Library.getInstance().addBook(data[0], data[1], year);
-                JOptionPane.showMessageDialog(addBookForm, Library.getInstance().getBookById(id).toString(), "book added", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, Library.getInstance().getBookById(id).toString(), "book added", JOptionPane.INFORMATION_MESSAGE);
                 resetInputFields();
-                bookModel.update();
+//                bookModel.update();
             }
         });
 
@@ -84,7 +94,7 @@ public class NewBookForm {
 
     // new frame
     public void changeFrameVisibility(){
-        this.addBookForm.setVisible(true);
+        this.setVisible(true);
     }
 
     private void resetInputFields(){
@@ -97,12 +107,12 @@ public class NewBookForm {
        // define inputs and button
        final String[] labels = {"title: ", "author: ", "publish year: "};
        for (String label : labels) {
-           JLabel l = new JLabel(label, JLabel.TRAILING);
-           this.addBookForm.add(l);
+           JLabel l = new JLabel(label, SwingConstants.LEFT);
+           this.add(l);
            JTextField textField = new JTextField(10);
            this.inputs.add(textField);
            l.setLabelFor(textField);
-           this.addBookForm.add(textField);
+           this.add(textField);
        }
    }
 

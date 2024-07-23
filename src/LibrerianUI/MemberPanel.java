@@ -36,6 +36,9 @@ public class MemberPanel extends JPanel {
             // add the result table to the screen
             this.results = new JTable(memberModel);
             this.scroll = new JScrollPane(results);
+
+            this.results.setPreferredScrollableViewportSize(new Dimension(1000,600));
+
             this.add(scroll);
             results.setDragEnabled(false);
 
@@ -64,20 +67,20 @@ public class MemberPanel extends JPanel {
             // choose if by id or by title, author, publish year (radio button)
             JRadioButton byId = new JRadioButton("id");
             byId.setActionCommand("id");
-            JRadioButton byTitle = new JRadioButton("name");
-            byTitle.setActionCommand("name");
-//            JRadioButton byAuthor = new JRadioButton("phone");
-//            byAuthor.setActionCommand("phone");
+            JRadioButton byName = new JRadioButton("name");
+            byName.setActionCommand("name");
+            JRadioButton byPhoneNumber = new JRadioButton("phone");
+            byPhoneNumber.setActionCommand("phone");
             byId.setSelected(true);
             this.choiceButtonGroup = new ButtonGroup();
             choiceButtonGroup.add(byId);
-            choiceButtonGroup.add(byTitle);
-//            choiceButtonGroup.add(byAuthor);
+            choiceButtonGroup.add(byName);
+            choiceButtonGroup.add(byPhoneNumber);
             JPanel radioPanel = new JPanel();
             radioPanel.setLayout(new FlowLayout());
             radioPanel.add(byId);
-            radioPanel.add(byTitle);
-//            radioPanel.add(byAuthor);
+            radioPanel.add(byName);
+            radioPanel.add(byPhoneNumber);
             return radioPanel;
         }
         public JPanel searchBar(){
@@ -132,11 +135,9 @@ public class MemberPanel extends JPanel {
                         else if(selection.equals("name")){
                             memberModel.passNewResults(library.getMembersByName(query));
                         }
-                        // add here search by phone number later
-//                        else{
-//                            memberModel.passNewResults(library.get(query));
-//                        }
-
+                        else if(selection.equals("phone")){
+                            memberModel.passNewResults(library.getMembersByPhone(query));
+                        }
                     }
                     else{
                         query = "";

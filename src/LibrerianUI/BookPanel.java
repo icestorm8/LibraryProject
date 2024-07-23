@@ -7,6 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.InvalidParameterException;
+import java.text.ParseException;
+import java.time.DateTimeException;
+import java.time.Year;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class BookPanel extends JPanel {
@@ -31,6 +36,9 @@ public class BookPanel extends JPanel {
         // add the result table to the screen
         this.results = new JTable(bookModel);
         this.scroll = new JScrollPane(results);
+
+        this.results.setPreferredScrollableViewportSize(new Dimension(1000,600));
+
         this.add(scroll);
         results.setDragEnabled(false);
 
@@ -63,16 +71,20 @@ public class BookPanel extends JPanel {
         byTitle.setActionCommand("title");
         JRadioButton byAuthor = new JRadioButton("author");
         byAuthor.setActionCommand("author");
+        JRadioButton byYear = new JRadioButton("year");
+        byYear.setActionCommand("year");
         byId.setSelected(true);
         this.choiceButtonGroup = new ButtonGroup();
         choiceButtonGroup.add(byId);
         choiceButtonGroup.add(byTitle);
         choiceButtonGroup.add(byAuthor);
+        choiceButtonGroup.add(byYear);
         JPanel radioPanel = new JPanel();
         radioPanel.setLayout(new FlowLayout());
         radioPanel.add(byId);
         radioPanel.add(byTitle);
         radioPanel.add(byAuthor);
+        radioPanel.add(byYear);
         return radioPanel;
     }
     public JPanel searchBar(){
@@ -125,6 +137,22 @@ public class BookPanel extends JPanel {
                     }
                     else if(selection.equals("title")){
                         bookModel.passNewResults(library.getBookByTitle(query));
+                    }
+                    else if(selection.equals("year")){
+                        int year;
+                        try {
+                            year = Year.parse(query).getValue();
+                            int currentYear = Year.now().getValue();
+                            if(year > currentYear){
+                                throw new InvalidParameterException();
+                            }
+                            bookModel.passNewResults(library.getBooksByYear(year));
+                        }catch (InvalidParameterException invalid){
+                            JOptionPane.showMessageDialog(Application.getInstance().getMainFrame(), "invalid parameter - no books available for future years","invalid input", JOptionPane.ERROR_MESSAGE);
+                        }catch(DateTimeParseException exception){
+                            JOptionPane.showMessageDialog(Application.getInstance().getMainFrame(), "invalid parameter - year must be numeric","invalid input", JOptionPane.ERROR_MESSAGE);
+                        }
+
                     }
                     else{
                         bookModel.passNewResults(library.getBookByAuthor(query));

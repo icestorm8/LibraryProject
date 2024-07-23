@@ -3,6 +3,7 @@ package LibrerianUI;
 import Logic.Library;
 import Logic.Loan;
 import Logic.Loan;
+import Logic.Observer;
 
 import javax.swing.table.AbstractTableModel;
 import java.text.ParseException;
@@ -10,12 +11,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class LoanTableModel extends AbstractTableModel{
+public class LoanTableModel extends AbstractTableModel implements Observer {
         private ArrayList<Loan> loans ;
         private String[] headers ;
 
         public LoanTableModel(ArrayList<Loan> loans){
             super();
+            Library.getInstance().addObserver(this);
             this.loans = loans ;
             headers = new String[]{"book id", "loan date", "return date", "is late"};
         }

@@ -1,16 +1,19 @@
 package LibrerianUI;
 
 import Logic.Book;
+import Logic.Library;
+import Logic.Observer;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
-public class BookTableModel extends AbstractTableModel {
+public class BookTableModel extends AbstractTableModel implements Observer {
         private ArrayList<Book> books ;
         private String[] headers ;
 
         public BookTableModel(ArrayList<Book> books){
             super();
+            Library.getInstance().addObserver(this);
             this.books = books ;
             headers = new String[]{"id", "title", "author", "publish year", "availability"};
         }

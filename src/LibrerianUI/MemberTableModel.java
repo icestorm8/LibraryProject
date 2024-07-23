@@ -1,17 +1,20 @@
 package LibrerianUI;
 
 import Logic.Book;
+import Logic.Library;
 import Logic.Member;
+import Logic.Observer;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
-public class MemberTableModel extends AbstractTableModel{
+public class MemberTableModel extends AbstractTableModel implements Observer {
         private ArrayList<Member> members ;
         private String[] headers ;
 
         public MemberTableModel(ArrayList<Member> members){
             super();
+            Library.getInstance().addObserver(this);
             this.members = members ;
             headers = new String[]{"id", "name", "phone number", "amount of borrowed books"};
         }
@@ -38,7 +41,7 @@ public class MemberTableModel extends AbstractTableModel{
                 default: return null;
             }
         }
-
+        // used on search
         public void passNewResults(ArrayList<Member> results){
             this.members = results;
             this.update();

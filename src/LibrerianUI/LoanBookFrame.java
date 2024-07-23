@@ -26,6 +26,7 @@ public class LoanBookFrame extends JFrame {
     private LoanBookFrame frame;
     public LoanBookFrame(Book book){
         this.frame = this;
+        this.setTitle(String.format("loan book - [%d] - %s", book.getBookId(), book.getTitle()));
         // librarian enters the id of the book the member chose (like scanning it)
         // than clicks on it
         // than if chose the option of borrowing the book - this frame is opened
@@ -36,8 +37,11 @@ public class LoanBookFrame extends JFrame {
 
         this.book = book;
         this.inputs = new ArrayList<>();
-        this.setLayout(new GridLayout(3, 1));
+        this.setLayout(new GridLayout(4, 1));
 
+        JLabel title = new JLabel("New Loan Form", SwingConstants.CENTER);
+        title.setFont(new Font("Serif", Font.PLAIN, 25));
+        this.add(title);
 
         this.add(this.errorPanel());
         JPanel loanForm = getInputs();
