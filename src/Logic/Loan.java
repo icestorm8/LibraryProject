@@ -21,11 +21,18 @@ public class Loan {
         this.loanStatus = "loaned";
     }
 
-    public Date getReturnDate(Date date) {
+    private Date getReturnDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DATE, 14); // + 2 weeks
         return calendar.getTime();
+    }
+
+    public void extendReturnDateBy(int days){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(this.returnDate);
+        calendar.add(Calendar.DATE, days); // + 2 weeks
+        this.returnDate = calendar.getTime();
     }
     // getters
 
@@ -45,10 +52,6 @@ public class Loan {
 
 
     // setters
-    public void setReturnDate(Date returnDate) {
-        // this should get a plus of how much time to add until return date and change it accordingly
-        this.returnDate = returnDate;
-    }
 
     public void returnBook(){
         this.loanStatus = "returned";

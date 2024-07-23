@@ -52,6 +52,6 @@ public class Member {
     }
     @Override
     public String toString() {
-        return String.format("name: %s\nphone number: %s\nid: %d\nloans: %s\n", this.name,this.phoneNumber, this.memberId, this.borrowedBooks.toString());
+        return String.format("name: %s\nphone number: %s\nid: %d\nloans: %s\n", this.name,this.phoneNumber, this.memberId, this.borrowedBooks.isEmpty() ? "no loans found": this.borrowedBooks.size() + "loans were found");
     }
 }

@@ -19,7 +19,7 @@ import java.text.ParseException;
 
 
 public class MemberPanel extends JPanel {
-
+        JPanel currentPanel;
         Library library;
         JTextField searchMember;
         JButton submitSearchButton;
@@ -30,6 +30,7 @@ public class MemberPanel extends JPanel {
         ButtonGroup choiceButtonGroup;
 
         public MemberPanel(){
+            this.currentPanel = this;
             this.library = Library.getInstance();
             this.memberModel = new MemberTableModel(this.library.getAllMembers());
 
@@ -130,7 +131,7 @@ public class MemberPanel extends JPanel {
                                 }
                                 memberModel.passNewResults(memberFound);
                             }catch (Exception exception){
-                                JOptionPane.showMessageDialog(Application.getInstance().getMainFrame(), exception,"invalid input", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(currentPanel, exception,"invalid input", JOptionPane.ERROR_MESSAGE);
                                 searchMember.setText("");
                             }
                         }
@@ -161,18 +162,19 @@ public class MemberPanel extends JPanel {
                     int row = results.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         Member selectedMember = memberModel.getMemberAtRow(row);
-                        String[] options = { "close", "remove","view borrowed books list"};
-                        int selection = JOptionPane.showOptionDialog(Application.getInstance().getMainFrame(), memberModel.getMemberAtRow(row), "what would you like to do?",
+                        String[] options = { "close", "remove","view extended details"};
+                        int selection = JOptionPane.showOptionDialog(currentPanel, selectedMember, "what would you like to do?",
                                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
                         if (selection == 1) {
-                            selection = JOptionPane.showConfirmDialog(Application.getInstance().getMainFrame(), "are you sure?", "confirm removal of book", JOptionPane.OK_CANCEL_OPTION);
+                            selection = JOptionPane.showConfirmDialog(currentPanel, "are you sure?", "confirm removal of book", JOptionPane.OK_CANCEL_OPTION);
                             if(selection == JOptionPane.OK_OPTION) {
                                 library.removeMember(selectedMember.getMemberId());
                                 memberModel.update();
                             }
                         }
                         if(selection == 2) {
-                            JOptionPane.showMessageDialog(Application.getInstance().getMainFrame(), selectedMember.getAllActiveLoans().isEmpty() ? "no borrowed books": selectedMember.getAllActiveLoans());
+                            MemberDataFrame memberDate = new MemberDataFrame(selectedMember);
+                            memberDate.setVisible(true);
                         }
                     }
                 }

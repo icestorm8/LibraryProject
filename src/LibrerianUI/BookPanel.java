@@ -150,9 +150,19 @@ public class BookPanel extends JPanel {
                 int row = results.rowAtPoint(evt.getPoint());
                 if (row >= 0) {
                     Book selectedBook = bookModel.getBookAtRow(row);
-                    String[] options = { "close", "remove", "add copy"};
-                    int selection = JOptionPane.showOptionDialog(Application.getInstance().getMainFrame(), bookModel.getBookAtRow(row), "what would you like to do?",
-                            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                    int selection;
+                    String[] options;
+
+                    if(!selectedBook.getState().equals("available")){
+                        options = new String[]{"close", "remove", "add copy"};
+                        selection = JOptionPane.showOptionDialog(Application.getInstance().getMainFrame(), bookModel.getBookAtRow(row), "what would you like to do?",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                    }else{
+                        options = new String[]{"close", "remove", "add copy", "loan"};
+                        selection = JOptionPane.showOptionDialog(Application.getInstance().getMainFrame(), bookModel.getBookAtRow(row), "what would you like to do?",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                    }
+
                     if (selection == 1) {
                         selection = JOptionPane.showConfirmDialog(Application.getInstance().getMainFrame(), "are you sure?", "confirm removal of book", JOptionPane.OK_CANCEL_OPTION);
                         if(selection == JOptionPane.OK_OPTION) {
@@ -166,6 +176,10 @@ public class BookPanel extends JPanel {
                             library.addCopyofBook(selectedBook);
                             bookModel.update();
                         }
+                    }
+                    if(selection == 3){
+                        LoanBookFrame loanBook = new LoanBookFrame(selectedBook);
+                        loanBook.setVisible(true);
                     }
                 }
             }

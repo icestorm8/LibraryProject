@@ -48,14 +48,18 @@ public class NewBookForm {
                     index++;
                 }
 
-                Year year;
+                int year;
                 try {
-                    year = Year.parse(data[2]);
+                    year = Year.parse(data[2]).getValue();
+                    int currentYear = Year.now().getValue();
+                    if(year > currentYear){
+                        throw new Exception();
+                    }
                 }catch (Exception error){
                     displayError(2);
                     return;
                 }
-                int id = Library.getInstance().addBook(data[0], data[1], Integer.parseInt(year.toString()));
+                int id = Library.getInstance().addBook(data[0], data[1], year);
                 JOptionPane.showMessageDialog(addBookForm, Library.getInstance().getBookById(id).toString(), "book added", JOptionPane.INFORMATION_MESSAGE);
                 resetInputFields();
                 bookModel.update();

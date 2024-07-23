@@ -9,8 +9,8 @@ public class Book implements Prototype{
     private static int id = 0;
 
     public Book(String title, String author, int publishYear){
-        this.title = title;
-        this.author = author;
+        this.title = title.toLowerCase();
+        this.author = author.toLowerCase();
         this.publishYear = publishYear;
         this.state = new AvailableState(); // by default available - consider using state pattern
         this.bookId = Book.id++;
