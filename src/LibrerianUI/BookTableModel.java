@@ -34,7 +34,6 @@ public class BookTableModel extends AbstractTableModel {
                 case 2: return book.getAuthor();
                 case 3: return book.getPublishYear();
                 case 4: return book.getState();
-                // to complete here...
                 default: return null;
             }
         }

@@ -20,7 +20,10 @@ public class Loan {
 //        this.borrower = borrower; // the person who borrowed the book, should get it to update its loan list
         this.loanStatus = "loaned";
     }
-
+    public boolean hasReturnDatePassed() {
+        Date currentDate = new Date(); // Current date
+        return this.returnDate.before(currentDate);
+    }
     private Date getReturnDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

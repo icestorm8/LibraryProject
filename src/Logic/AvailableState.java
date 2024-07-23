@@ -14,7 +14,7 @@ public class AvailableState implements BookState{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "available";
     }
 }

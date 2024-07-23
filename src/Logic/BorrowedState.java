@@ -13,7 +13,7 @@ public class BorrowedState implements BookState{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "borrowed";
     }
 }

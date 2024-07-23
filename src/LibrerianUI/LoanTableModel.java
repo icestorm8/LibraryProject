@@ -37,12 +37,8 @@ public class LoanTableModel extends AbstractTableModel{
                 case 0: return Library.getInstance().getBookById(loan.getBookId());
                 case 1: return loan.getLoanDate();
                 case 2: return loan.getReturnDate();
-                case 3:
-                    try {
-                        return new SimpleDateFormat("MM/yyyy").parse(loan.getReturnDate().toString()).before(new Date());
-                    } catch (ParseException e) {
-                        return "error";
-                    }
+                case 3: return loan.hasReturnDatePassed();
+
                     // to complete here...
                 default: return null;
             }

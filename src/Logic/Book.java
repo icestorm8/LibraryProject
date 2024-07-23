@@ -72,8 +72,8 @@ public class Book implements Prototype{
     }
     @Override
     public String toString() {
-        return String.format("title: %s\nauthor: %s\npublish year: %d\navailable: %b\nid: %d", this.title, this.author, this.publishYear,
-             this.state.toString(), this.bookId);
+        return String.format("title: %s\nauthor: %s\npublish year: %d\navailable: %s\nid: %d", this.title, this.author, this.publishYear,
+             this.state.toString().equals("available") ? "true" : "borrowed" , this.bookId);
     }
 
     //5. Logic.Prototype Pattern - consider using for copying the book and creating another instance of it

@@ -11,12 +11,6 @@ import java.util.ArrayList;
 import Logic.Book;
 import Logic.Library;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.ParseException;
-
 
 public class MemberPanel extends JPanel {
         JPanel currentPanel;

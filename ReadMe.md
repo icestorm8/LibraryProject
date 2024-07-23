@@ -58,3 +58,34 @@
 ![img_9.png](readmeImages/img_9.png)
 ![img_10.png](readmeImages/img_10.png)
 ![img_11.png](readmeImages/img_11.png)
+
+
+# update 23/7/24 (5:17 am)
+![img.png](readmeImages/update237/img.png)
+![img_1.png](readmeImages/update237/img_1.png)
+![img_7.png](readmeImages/update237/img_7.png)
+![img_2.png](readmeImages/update237/img_2.png)
+![img_3.png](readmeImages/update237/img_3.png)
+![img_4.png](readmeImages/update237/img_4.png)
+![img_5.png](readmeImages/update237/img_5.png)
+![img_6.png](readmeImages/update237/img_6.png)
+![img_8.png](readmeImages/update237/img_8.png)
+![img_9.png](readmeImages/update237/img_9.png)
+![img_10.png](readmeImages/update237/img_10.png)
+![img_11.png](readmeImages/update237/img_11.png)
+![img_12.png](readmeImages/img_12.png)
+
+# update 5:30 am:
+- fixed the is late error
+![img_13.png](readmeImages/img_13.png)
+- fixed the availability status not showing correctly
+![img_14.png](readmeImages/img_14.png)
+
+# to do
+- add loans and late reports on the loan & return window
+- change design a bit (Window locations, size of tables, check for an amount of data that is bigger than the table)
+- add tests - load the data before app opens cause its a nightmare
+- add the last pattern (4th)
+- add javadoc for everything
+- add update of book data (optional)
+- on removal of a book, remove the loan from the member cause it doesn't matter no more

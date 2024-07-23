@@ -4,22 +4,10 @@ import Logic.Library;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.Year;
 import java.util.ArrayList;
 
 
 import Logic.Book;
-import Logic.Library;
-import Logic.Member;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.Year;
-import java.util.ArrayList;
 
 public class NewMemberForm extends JFrame {
         private static final JLabel error_empty_fields = new JLabel("must fill all fields to add a new member!");
