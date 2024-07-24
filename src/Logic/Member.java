@@ -15,6 +15,8 @@ public class Member {
      * @param phoneNumber phone number
      */
     public Member(String name, String phoneNumber){
+        String numericRegex = "[0-9]+";
+        String allCountryRegex = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{3,4}[- .]?\\d{4}$";
         if(name == null || phoneNumber == null){
             System.out.println("can't create member with null fields");
             throw new NullPointerException("arguments are null -> Must provide name and phone number");
@@ -25,6 +27,12 @@ public class Member {
             throw new IllegalArgumentException(
                     "arguments are empty -> must provide name and phone number");
 
+        }
+        if(!phoneNumber.matches(numericRegex)){
+            throw new IllegalArgumentException("MUST ENTER NUMERIC NUMBER");
+        }
+        if(!phoneNumber.matches(allCountryRegex)){
+            throw new IllegalArgumentException("NOT A VALID PHONE NUMBER");
         }
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -73,7 +81,10 @@ public class Member {
     public void setName(String name) {
         if(name == null){
             System.out.println("name can't be null");
-            return;
+            throw new NullPointerException("NAME CAN'T BE NULL");
+        }
+        if(!name.matches("^[ A-Za-z]+$")){
+            throw new IllegalArgumentException("Name must contain only letters and spaces");
         }
         if(name.isEmpty()){
             System.out.println("name can't be empty");
@@ -81,7 +92,19 @@ public class Member {
         }
         this.name = name;
     }
-    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+    public void setPhoneNumber(String phoneNumber) {
+        String numericRegex = "[0-9]+";
+        String allCountryRegex = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{3,4}[- .]?\\d{4}$";
+        if(phoneNumber ==  null){
+            throw new NullPointerException("must enter phone number");
+        }
+        if(!phoneNumber.matches(numericRegex)){
+            throw new IllegalArgumentException("MUST ENTER NUMERIC NUMBER");
+        }
+        if(!phoneNumber.matches(allCountryRegex)){
+            throw new IllegalArgumentException("NOT A VALID PHONE NUMBER");
+        }
+        this.phoneNumber = phoneNumber;}
 
     /**
      * creates a new loan for the book with the id received

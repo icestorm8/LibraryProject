@@ -107,7 +107,7 @@ public class Book implements Prototype{
      */
     public void setPublishYear(int publishYear) {
         int currentYear = Year.now().getValue();
-        if(publishYear > currentYear){
+        if(publishYear < currentYear && publishYear>0){
             this.publishYear = publishYear;
         }
         else{
@@ -119,7 +119,7 @@ public class Book implements Prototype{
      * used to change the state of the book object
      * @param newState of type BookState
      */
-    public void setState(BookState newState) {
+    protected void setState(BookState newState) {
         this.state = newState;
     }
 
@@ -137,11 +137,7 @@ public class Book implements Prototype{
      * changes the state after borrowing/ returning a book
      */
     public void doAction(){
-        if(this.state instanceof AvailableState){
-            this.state.borrowBook(this);
-        }else{
-            this.state.returnBook(this);
-        }
+        this.state.doAction(this);
     }
 
     /**

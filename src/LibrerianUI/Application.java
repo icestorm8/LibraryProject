@@ -1,7 +1,5 @@
 package LibrerianUI;
 
-import Logic.Library;
-
 public class Application {
     private MainWindow mainFrame;
     private static Application applicationInstance = null;

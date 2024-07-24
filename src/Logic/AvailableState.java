@@ -8,16 +8,11 @@ public class AvailableState implements BookState{
      * @param book Book to borrow
      */
     @Override
-    public void borrowBook(Book book) {
-        System.out.println("book can be borrowed");
+    public void doAction(Book book) {
+//        System.out.println("book can be borrowed");
         book.setState(new BorrowedState());
     }
 
-
-    @Override
-    public void returnBook(Book book) {
-        System.out.println("book already available, no returns - do nothing");
-    }
 
     /**
      * toString override, returns the state as a readable string

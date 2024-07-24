@@ -240,10 +240,8 @@ public class Library implements Subject {
     }
 
     /**
-     * removes all copies of a book properties( name, author and publishing year_
-     * @param title
-     * @param author
-     * @param publishYear
+     * removes all copies of a book (same properties - name, author and publishing year)
+     * @param toRemove book
      * @return true (books found and removed), false (book/s weren't found)
      */
     public boolean removeAllCopies(Book toRemove){
@@ -367,6 +365,7 @@ public class Library implements Subject {
      */
     public boolean loanBook(Book book, int memberId){
         if(book == null) return false;
+        if(book.getState().equals("borrowed")) return false;
         Member member = this.getMemberById(memberId);
         if(member!= null){
             book.doAction();
@@ -382,14 +381,16 @@ public class Library implements Subject {
      * updates the book state and removes it from the loan list of the member that loaned it
      * @param bookId
      */
-    public void returnBook(int bookId){
+    public boolean returnBook(int bookId){
         // this will return the book if the book is borrowed
         Book book = this.getBookById(bookId);
-        if(book == null){return;}
+        if(book == null){return false;}
+        if(book.getState().equals("available")) return false;
         // remove loan from member
         this.removeLoanByBookId(bookId);
         book.doAction();
         this.notifyObservers();
+        return true;
     }
 
     /**

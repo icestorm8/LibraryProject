@@ -13,6 +13,7 @@ public class NewMemberForm extends JFrame {
         private static final JLabel error_empty_fields = new JLabel("must fill all fields to add a new member!");
         private static final JLabel error_member_exists = new JLabel("member already exists!");
         private static final JLabel error_illegal_phone_number = new JLabel("bad phone number");
+        private static final JLabel error_phone_must_contain_only_letters_and_spaces = new JLabel("must use only letters and spaces for names");
         private ArrayList<JTextField> inputs;
         MemberTableModel memberModel;
         public NewMemberForm(MemberTableModel memberModel){
@@ -30,6 +31,8 @@ public class NewMemberForm extends JFrame {
             this.add(LibrerianUI.NewMemberForm.error_member_exists);
             NewMemberForm.error_illegal_phone_number.setVisible(false);
             this.add(LibrerianUI.NewMemberForm.error_illegal_phone_number);
+            NewMemberForm.error_phone_must_contain_only_letters_and_spaces.setVisible(false);
+            this.add(LibrerianUI.NewMemberForm.error_phone_must_contain_only_letters_and_spaces);
 
 
             JLabel title = new JLabel("New Member Form", SwingConstants.CENTER);
@@ -50,7 +53,7 @@ public class NewMemberForm extends JFrame {
 
             // add event listener for submit form button
             submit.addActionListener(e -> {
-                displayError(4);
+                displayError(5);
                 String[] data = {"", ""};
                 int index = 0;
                 for(JTextField input: inputs){
@@ -61,11 +64,16 @@ public class NewMemberForm extends JFrame {
                     data[index] = input.getText();
                     index++;
                 }
+                if(!data[0].matches("^[ A-Za-z]+$")){
+                    displayError(4);
+                    return;
+                }
                 String allCountryRegex = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{3,4}[- .]?\\d{4}$";
                 if(!data[1].matches(allCountryRegex)){
                     displayError(3);
                     return;
                 }
+
 
                 int id = Library.getInstance().addMember(data[0], data[1]);
                 JOptionPane.showMessageDialog(null, Library.getInstance().getMemberById(id).toString(), "member added", JOptionPane.INFORMATION_MESSAGE);
@@ -85,10 +93,14 @@ public class NewMemberForm extends JFrame {
                 case 3:
                     NewMemberForm.error_illegal_phone_number.setVisible(true);
                     break;
+                case 4:
+                    NewMemberForm.error_phone_must_contain_only_letters_and_spaces.setVisible(true);
+                    break;
                 default:
                     LibrerianUI.NewMemberForm.error_member_exists.setVisible(false);
                     LibrerianUI.NewMemberForm.error_empty_fields.setVisible(false);
                     NewMemberForm.error_illegal_phone_number.setVisible(false);
+                    NewMemberForm.error_phone_must_contain_only_letters_and_spaces.setVisible(false);
             }
 
         }
