@@ -26,7 +26,7 @@ public class MainWindow extends JFrame {
         tabbedPane.addTab("home", homePanel);
         tabbedPane.addTab("book actions", bookPanel);
         tabbedPane.addTab("member actions ", memberPanel);
-        tabbedPane.addTab("loans & returns", loanPanel);
+        tabbedPane.addTab("late loans", loanPanel);
 
         // set size to fit screen size
         Toolkit tk = Toolkit.getDefaultToolkit();
