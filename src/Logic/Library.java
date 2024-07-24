@@ -34,7 +34,13 @@ public class Library implements Subject {
         return libraryInstance;
     }
 
-
+    /**
+     * used for testing
+     */
+    public void resetLibrary(){
+        this.books.clear();
+        this.members.clear();
+    }
     // members
 
     /**
@@ -127,21 +133,46 @@ public class Library implements Subject {
      * @return arraylist of members with the same phone (typically a family)
      */
     public ArrayList<Member> getMembersByPhone(String phoneNumber){
+        ArrayList<Member> result = new ArrayList<>();
         if(phoneNumber == null){
             return null;
         }
         if(phoneNumber.isEmpty()){
             return null;
         }
-        ArrayList<Member> result = new ArrayList<>();
-        for(Member member: this.members){
-            if(member.getPhoneNumber().equals(phoneNumber) || member.getPhoneNumber().contains(phoneNumber)){
-                result.add(member);
+        if(!Library.isValidGlobalNumber(phoneNumber)){
+            String regex = "[0-9]+";
+            if(phoneNumber.matches(regex)){
+                for(Member member: this.members){
+                    if(member.getPhoneNumber().contains(phoneNumber)){
+                        result.add(member);
+                    }
+                }
+                return result;
+            }else{
+                return null;
             }
         }
-        return result;
+        else{
+            for(Member member: this.members){
+                if(member.getPhoneNumber().equals(phoneNumber) || member.getPhoneNumber().contains(phoneNumber)){
+                    result.add(member);
+                }
+            }
+            return result;
+        }
+
     }
 
+    /**
+     * checks if string is a valid global phone number
+     * @param phoneNumber to check
+     * @return true - is valid, false - not valid
+     */
+    private static boolean isValidGlobalNumber(String phoneNumber) {
+        String allCountryRegex = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{3,4}[- .]?\\d{4}$";
+        return phoneNumber.matches(allCountryRegex);
+    }
 
     /**
      * returns a list with all members that has the same name (equals or contains)
@@ -215,8 +246,8 @@ public class Library implements Subject {
      * @param publishYear
      * @return true (books found and removed), false (book/s weren't found)
      */
-    public boolean removeAllCopies(String title, String author, int publishYear){
-        boolean isSuccessful = this.books.removeIf(book -> book.getTitle().equals(title) && book.getAuthor().equals(author) && book.getPublishYear() == publishYear);
+    public boolean removeAllCopies(Book toRemove){
+        boolean isSuccessful = this.books.removeIf(book -> book.equals(toRemove));
         this.notifyObservers();
         return isSuccessful;
     }
@@ -228,12 +259,11 @@ public class Library implements Subject {
      * clones a book by receiving the book object itself
      * @param book
      */
-    public void addCopyofBook(Book book){
-        System.out.println(book);
+    public Book addCopyofBook(Book book){
         Book copy = (Book) book.clone();
-        System.out.println(copy);
         this.books.add(copy);
         this.notifyObservers();
+        return copy;
     }
 
     /**
@@ -241,16 +271,15 @@ public class Library implements Subject {
      * the id is than searched and if the book object with that id is found - the book is cloned
      * @param id
      */
-    public void addCopyofBookById(int id){
+    public Book addCopyofBookById(int id){
         Book book = this.getBookById(id);
         if(book != null){
-            System.out.println(book);
             Book copy = (Book) book.clone();
-            System.out.println(copy);
             this.books.add(copy);
             this.notifyObservers();
+            return copy;
         }
-
+        return null;
     }
 
     /**

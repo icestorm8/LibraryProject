@@ -2,6 +2,7 @@ package Logic;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Book implements Prototype{
     private ArrayList<Observer> observers = new ArrayList<>(); // library, members, ui
@@ -153,5 +154,17 @@ public class Book implements Prototype{
              this.state.toString().equals("available") ? "true" : "borrowed" , this.bookId);
     }
 
+
+    /**
+     * @param object the object to be compared.
+     * @return
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Book book = (Book) object;
+        return publishYear == book.publishYear && Objects.equals(title, book.title) && Objects.equals(author, book.author);
+    }
 
 }
