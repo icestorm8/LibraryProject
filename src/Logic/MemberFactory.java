@@ -26,7 +26,6 @@ public class MemberFactory {
             }
         }
         // Create a new member
-
         Member newMember;
         if (type.equals("librarian")) {
             newMember = new Librarian(name, phoneNumber);

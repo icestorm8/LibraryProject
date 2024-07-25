@@ -9,7 +9,6 @@ public class AvailableState implements BookState{
      */
     @Override
     public void doAction(Book book) {
-//        System.out.println("book can be borrowed");
         book.setState(new BorrowedState());
     }
 
