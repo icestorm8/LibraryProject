@@ -16,11 +16,11 @@ public class Library implements Subject {
      * private constructor, used for creating only one instance of the book
      */
     private Library(){
-        this.librarian = new Librarian("1");
         this.books = new ArrayList<Book>();
         this.members = new ArrayList<Member>();
         this.memberfactory = new MemberFactory(this.members);
         this.bookfactory = new BookFactory(this.books);
+        this.librarian = (Librarian) this.getMemberById(this.addLibrarian("librarian 1", "0504616333"));
     }
 
     /**
@@ -74,10 +74,26 @@ public class Library implements Subject {
             return -1;
         }
         // if doesn't have membership = create new member, else - return id of existing one
-        Member newMember = this.memberfactory.createMember(name, phoneNumber);
+        Member newMember = this.memberfactory.createMember(name, phoneNumber, "member");
         this.notifyObservers();
         return newMember.getMemberId();
     }
+
+    private int addLibrarian(String name, String phoneNumber){
+        if(name == null || phoneNumber == null){
+            System.out.println("invalid arguments - null");
+            return -1;
+        }
+        if(name.isEmpty() || phoneNumber.isEmpty()){
+            System.out.println("invalid arguments - empty");
+            return -1;
+        }
+        // if doesn't have membership = create new member, else - return id of existing one
+        Member newMember = this.memberfactory.createMember(name, phoneNumber, "librarian");
+        this.notifyObservers();
+        return newMember.getMemberId();
+    }
+
 
     /**
      * remove an existing member by its id

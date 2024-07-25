@@ -157,20 +157,26 @@ public class MemberPanel extends JPanel {
                     int row = results.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         Member selectedMember = memberModel.getMemberAtRow(row);
-                        String[] options = { "close", "remove","view extended details"};
+                        String[] options;
+                        if(selectedMember instanceof Librarian){
+                            options = new String[]{ "close","view extended details"};
+                        }else{
+                            options = new String[]{ "close","view extended details", "remove"};
+                        }
                         int selection = JOptionPane.showOptionDialog(currentPanel, selectedMember, "what would you like to do?",
                                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-                        if (selection == 1) {
+                        if(selection == 1) {
+                            MemberDataFrame memberDate = new MemberDataFrame(selectedMember);
+                            memberDate.setVisible(true);
+                        }
+                        if (selection == 2) {
                             selection = JOptionPane.showConfirmDialog(currentPanel, "are you sure?", "confirm removal of book", JOptionPane.OK_CANCEL_OPTION);
                             if(selection == JOptionPane.OK_OPTION) {
                                 library.removeMember(selectedMember.getMemberId());
                                 memberModel.update();
                             }
                         }
-                        if(selection == 2) {
-                            MemberDataFrame memberDate = new MemberDataFrame(selectedMember);
-                            memberDate.setVisible(true);
-                        }
+
                     }
                 }
             });
