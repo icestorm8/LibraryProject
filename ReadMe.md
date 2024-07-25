@@ -1,3 +1,7 @@
+
+https://github.com/user-attachments/assets/e7f9be5f-a6c4-47ea-87d4-f9e2c48eeb2d
+
+
 # design patterns:
 * factory method 
   * for creating a book object
