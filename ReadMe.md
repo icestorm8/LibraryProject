@@ -1,8 +1,10 @@
 
+# presentation
 https://github.com/user-attachments/assets/e7f9be5f-a6c4-47ea-87d4-f9e2c48eeb2d
-
+# class uml
 ![final uml](https://github.com/user-attachments/assets/58fcd055-063d-4987-a5b4-01ecb21cf111)
-
+# watch use example on youtube
+[![YouTube](http://i.ytimg.com/vi/vUrJyvbUh9g/hqdefault.jpg)](https://www.youtube.com/watch?v=vUrJyvbUh9g)
 # design patterns:
 * factory method 
   * for creating a book object
