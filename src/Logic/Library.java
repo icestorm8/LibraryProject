@@ -341,7 +341,7 @@ public class Library implements Subject {
         }
         ArrayList<Book> booksWithTitle = new ArrayList<>();
         for(Book book: this.books){
-            if(book.getTitle().equals(query) || book.getTitle().contains(query)){
+            if(book.getTitle().equalsIgnoreCase(query) || book.getTitle().contains(query.toLowerCase())){
                 booksWithTitle.add(book);
             }
         }
@@ -359,7 +359,7 @@ public class Library implements Subject {
         }
         ArrayList<Book> booksWithAuthor = new ArrayList<>();
         for(Book book: this.books){
-            if(book.getAuthor().equals(query) || book.getAuthor().contains(query)){
+            if(book.getAuthor().equalsIgnoreCase(query) || book.getAuthor().contains(query.toLowerCase())){
                 booksWithAuthor.add(book);
             }
         }
